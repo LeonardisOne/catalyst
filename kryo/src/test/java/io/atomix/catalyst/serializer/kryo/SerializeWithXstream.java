@@ -14,6 +14,8 @@ public class SerializeWithXstream {
 
         XStream xstream = new XStream();
         xstream.alias("boo", Boo.class);
+        // avoid exception thrown by serializing classLoader
+        xstream.omitField(Kryo.class, "classLoader");
         System.out.println("xstream created");
         
         Kryo kryo = new Kryo();

@@ -25,11 +25,12 @@ public class XstreamSerializerTest {
 
 		System.out.println("invoke writeObject()");
 		kryo.writeObject(output, b);
-        output.close();
         Input input = new Input(new ByteArrayInputStream(output.getBuffer()));
+        output.close();
         System.out.println("invoke readObject()");
         Boo b2 = kryo.readObject(input, Boo.class);
         assertEquals(b.name, b2.name);
+        System.out.println("end test");
 	}
 
 }
