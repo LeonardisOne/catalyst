@@ -1,35 +1,29 @@
 package io.atomix.catalyst.serializer.kryo;
 
+import static com.github.davidmoten.rtree.geometry.Geometries.rectangle;
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.Map;
 import org.junit.Test;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import io.atomix.catalyst.serializer.kryo.SerializeWithXstream.Boo;
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Rectangle;
 
 public class XstreamSerializerTest {
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test() {
 		System.out.println("start test");
-		Map<String, String> serializedObjects = SerializeWithXstream.serialize();
 
-		Map<String, Object> deserializedObjects = SerializeWithXstream.deserialize(serializedObjects);
-		Kryo kryo = (Kryo) deserializedObjects.get("kryo");
-		Boo b = (Boo) deserializedObjects.get("boo");
-		Output output = (Output) deserializedObjects.get("output");
+		Map<String, Object> deserializedObjects = SerializeWithXstream.deserialize();
+		RTree<Object, Rectangle> tree = (RTree<Object, Rectangle>) deserializedObjects.get("rtree");
+		Entry<Object, Rectangle> entry = (Entry<Object, Rectangle>) deserializedObjects.get("entry");
 
-		System.out.println("invoke writeObject()");
-		kryo.writeObject(output, b);
-        Input input = new Input(new ByteArrayInputStream(output.getBuffer()));
-        output.close();
-        System.out.println("invoke readObject()");
-        Boo b2 = kryo.readObject(input, Boo.class);
-        assertEquals(b.name, b2.name);
+		System.out.println("use objects");
+        assertEquals(Arrays.asList(entry), tree.search(rectangle(1, 1, 2, 2)).toList().toBlocking().single());
         System.out.println("end test");
 	}
 
