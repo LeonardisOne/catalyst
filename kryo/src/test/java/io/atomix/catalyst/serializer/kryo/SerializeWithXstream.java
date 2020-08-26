@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.File;
 
-import com.github.davidmoten.rtree.Entry;
-import com.github.davidmoten.rtree.RTree;
-import com.github.davidmoten.rtree.geometry.Rectangle;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 
@@ -27,8 +24,8 @@ public class SerializeWithXstream {
         System.out.println("start deserializing");
         File treefile = new File("./serialized/rtree.xml");
         File entryfile = new File("./serialized/entry.xml");
-        RTree<Object, Rectangle> tree = (RTree<Object, Rectangle>)xstream.fromXML(treefile);
-        Entry<Object, Rectangle> entry = (Entry<Object, Rectangle>)xstream.fromXML(entryfile);
+        Object tree = xstream.fromXML(treefile);
+        Object entry = xstream.fromXML(entryfile);
         
         deserializedObjects.put("rtree", tree);
         deserializedObjects.put("entry", entry);
