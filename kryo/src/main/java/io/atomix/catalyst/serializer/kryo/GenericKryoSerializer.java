@@ -22,6 +22,7 @@ import io.atomix.catalyst.buffer.BufferInput;
 import io.atomix.catalyst.buffer.BufferInputStream;
 import io.atomix.catalyst.buffer.BufferOutput;
 import io.atomix.catalyst.buffer.BufferOutputStream;
+import io.atomix.catalyst.buffer.UnsafeHeapBuffer;
 import io.atomix.catalyst.serializer.Serializer;
 import io.atomix.catalyst.serializer.TypeSerializer;
 
@@ -37,6 +38,12 @@ public class GenericKryoSerializer implements TypeSerializer {
   public void write(Object object, BufferOutput buffer, Serializer serializer) {
     Output output = new Output(new BufferOutputStream(buffer));
     kryo.writeObject(output, object);
+    output.flush();
+  }
+  
+  public void write(Object object, UnsafeHeapBuffer buffer, Serializer serializer) {
+	Output output = new Output(new BufferOutputStream(buffer));
+	kryo.writeObject(output, object);
     output.flush();
   }
 
